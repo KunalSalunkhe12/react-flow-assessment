@@ -6,20 +6,35 @@ import { useState, useRef, useCallback } from "react";
 import { ReactFlow, Controls, Background, MiniMap } from "@xyflow/react";
 import { useStore } from "./store";
 import { shallow } from "zustand/shallow";
-import { InputNode } from "./nodes/inputNode";
-import { LLMNode } from "./nodes/llmNode";
-import { OutputNode } from "./nodes/outputNode";
-import { TextNode } from "./nodes/textNode";
+import {
+  InputNode,
+  OutputNode,
+  LLMNode,
+  TextNode,
+  FilterNode,
+  TransformNode,
+  ConditionalNode,
+  AggregatorNode,
+  DelayNode,
+} from "./nodes/NodeTypes";
+import { nodeConfigs } from "./nodes/nodeConfigs";
 
 import "@xyflow/react/dist/style.css";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+
+// Register all node types
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  filter: FilterNode,
+  transform: TransformNode,
+  conditional: ConditionalNode,
+  aggregator: AggregatorNode,
+  delay: DelayNode,
 };
 
 const selector = (state) => ({
@@ -54,7 +69,6 @@ export const PipelineUI = () => {
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       if (event?.dataTransfer?.getData("application/reactflow")) {
         const appData = JSON.parse(
           event.dataTransfer.getData("application/reactflow")
@@ -66,11 +80,20 @@ export const PipelineUI = () => {
           return;
         }
 
-        // Use screenToFlowPosition instead of project
+        // screenToFlowPosition handles the viewport transformation internally
         const position = reactFlowInstance.screenToFlowPosition({
-          x: event.clientX - reactFlowBounds.left,
-          y: event.clientY - reactFlowBounds.top,
+          x: event.clientX,
+          y: event.clientY,
         });
+
+        // Get node dimensions from config to center it at cursor
+        const config = nodeConfigs[type];
+        const nodeWidth = config?.width || 200;
+        const nodeHeight = config?.minHeight || 80;
+
+        // Offset position to center the node at cursor
+        position.x -= nodeWidth / 2;
+        position.y -= nodeHeight / 2;
 
         const nodeID = getNodeID(type);
         const newNode = {
