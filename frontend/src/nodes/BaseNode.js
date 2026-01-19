@@ -132,18 +132,16 @@ export const BaseNode = ({ id, data, config }) => {
 
   return (
     <div style={nodeStyle}>
-      {/* Render handles */}
       {config.handles?.map((handle, index) => (
         <Handle
           key={`${handle.type}-${handle.id || index}`}
           type={handle.type}
           position={handle.position}
           id={`${id}-${handle.id}`}
-          style={handle.style}
+          className={`size-3! ${handle.style}`}
         />
       ))}
 
-      {/* Render title */}
       {config.title && (
         <div
           style={{
@@ -157,7 +155,6 @@ export const BaseNode = ({ id, data, config }) => {
         </div>
       )}
 
-      {/* Render custom content if provided */}
       {config.content && (
         <div style={{ marginBottom: "8px", ...config.contentStyle }}>
           {typeof config.content === "function"
@@ -166,7 +163,6 @@ export const BaseNode = ({ id, data, config }) => {
         </div>
       )}
 
-      {/* Render fields */}
       {config.fields?.map((field) => (
         <div
           key={field.name}
