@@ -1,13 +1,13 @@
 import { PipelineToolbar } from "./toolbar";
 import { PipelineUI } from "./ui";
-import { SubmitButton } from "./submit";
 
 function App() {
   return (
-    <div className="font-poppins">
+    <div className="flex flex-col h-screen">
       <PipelineToolbar />
-      <PipelineUI />
-      <SubmitButton />
+      <div className="flex-1">
+        <PipelineUI />
+      </div>
     </div>
   );
 }

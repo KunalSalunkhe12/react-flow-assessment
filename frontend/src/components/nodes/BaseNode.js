@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { Handle } from "@xyflow/react";
-import { useStore } from "../store";
+import { useStore } from "../../store";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Checkbox } from "../ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export const BaseNode = ({ id, data, config }) => {
   // Initialize state for all fields defined in config
@@ -46,71 +56,75 @@ export const BaseNode = ({ id, data, config }) => {
     switch (field.type) {
       case "text":
         return (
-          <input
+          <Input
             type="text"
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
             placeholder={field.placeholder}
-            style={{ width: "100%", ...field.style }}
           />
         );
 
       case "textarea":
         return (
-          <textarea
+          <Textarea
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
             placeholder={field.placeholder}
             rows={field.rows || 3}
-            style={{ width: "100%", resize: "vertical", ...field.style }}
+            className="resize-vertical"
           />
         );
 
       case "select":
         return (
-          <select
+          <Select
             value={value}
-            onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            style={{ width: "100%", ...field.style }}
+            onValueChange={(newValue) =>
+              handleFieldChange(field.name, newValue)
+            }
           >
-            {field.options?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={field.placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         );
 
       case "number":
         return (
-          <input
+          <Input
             type="number"
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
             min={field.min}
             max={field.max}
             step={field.step}
-            style={{ width: "100%", ...field.style }}
+            className="w-full"
           />
         );
 
       case "checkbox":
         return (
-          <input
-            type="checkbox"
+          <Checkbox
             checked={value}
-            onChange={(e) => handleFieldChange(field.name, e.target.checked)}
-            style={field.style}
+            onCheckedChange={(checked) =>
+              handleFieldChange(field.name, checked)
+            }
           />
         );
 
       case "color":
         return (
-          <input
+          <Input
             type="color"
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            style={field.style}
           />
         );
 
@@ -123,66 +137,53 @@ export const BaseNode = ({ id, data, config }) => {
     width: config.width || 200,
     height: config.height || "auto",
     minHeight: config.minHeight || 80,
-    border: config.border || "1px solid black",
-    borderRadius: config.borderRadius || "4px",
-    padding: config.padding || "10px",
     backgroundColor: config.backgroundColor || "white",
     ...config.style,
   };
 
   return (
-    <div style={nodeStyle}>
+    <div
+      style={nodeStyle}
+      className="bg-white border-2 border-primary/50 rounded-md p-1"
+    >
       {config.handles?.map((handle, index) => (
         <Handle
           key={`${handle.type}-${handle.id || index}`}
           type={handle.type}
           position={handle.position}
           id={`${id}-${handle.id}`}
-          className={`size-3! ${handle.style}`}
+          className={`size-3! bg-primary!`}
         />
       ))}
 
       {config.title && (
-        <div
-          style={{
-            fontWeight: "bold",
-            marginBottom: "8px",
-            fontSize: "14px",
-            ...config.titleStyle,
-          }}
-        >
-          {config.title}
-        </div>
+        <div className="bg-primary/20 py-1 px-2 rounded-sm">{config.title}</div>
       )}
 
-      {config.content && (
-        <div style={{ marginBottom: "8px", ...config.contentStyle }}>
-          {typeof config.content === "function"
-            ? config.content(fieldValues, id)
-            : config.content}
-        </div>
-      )}
+      <div className="px-2">
+        {config.fields?.map((field) => {
+          // Check if field should be shown based on showWhen condition
+          if (field.showWhen) {
+            const { field: dependentField, value: expectedValue } =
+              field.showWhen;
+            const dependentFieldValue = fieldValues[dependentField];
 
-      {config.fields?.map((field) => (
-        <div
-          key={field.name}
-          style={{ marginBottom: "8px", ...field.containerStyle }}
-        >
-          {field.label && (
-            <label
-              style={{
-                display: "block",
-                fontSize: "12px",
-                marginBottom: "4px",
-                ...field.labelStyle,
-              }}
-            >
-              {field.label}
-            </label>
-          )}
-          {renderField(field)}
-        </div>
-      ))}
+            // Don't show field if condition isn't met
+            if (dependentFieldValue !== expectedValue) {
+              return null;
+            }
+          }
+
+          return (
+            <div key={field.name} className="space-y-2 my-2">
+              {field.label && (
+                <label className="text-xs font-medium">{field.label}</label>
+              )}
+              {renderField(field)}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

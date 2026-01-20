@@ -9,15 +9,15 @@ import { shallow } from "zustand/shallow";
 import {
   InputNode,
   OutputNode,
-  LLMNode,
+  OpenAINode,
   TextNode,
-  FilterNode,
   TransformNode,
-  ConditionalNode,
-  AggregatorNode,
-  DelayNode,
-} from "./nodes/NodeTypes";
-import { nodeConfigs } from "./nodes/nodeConfigs";
+  CustomAINode,
+  DocumentNode,
+  PipelineNode,
+  VectorStoreNode,
+} from "./components/nodes/NodeTypes";
+import { nodeConfigs } from "./components/nodes/nodeConfigs";
 
 import "@xyflow/react/dist/style.css";
 
@@ -27,14 +27,14 @@ const proOptions = { hideAttribution: true };
 // Register all node types
 const nodeTypes = {
   customInput: InputNode,
-  llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
-  filter: FilterNode,
+  pipeline: PipelineNode,
   transform: TransformNode,
-  conditional: ConditionalNode,
-  aggregator: AggregatorNode,
-  delay: DelayNode,
+  openAI: OpenAINode,
+  customAI: CustomAINode,
+  vectorStore: VectorStoreNode,
+  document: DocumentNode,
 };
 
 const selector = (state) => ({
@@ -116,7 +116,7 @@ export const PipelineUI = () => {
 
   return (
     <>
-      <div ref={reactFlowWrapper} style={{ width: "100wv", height: "70vh" }}>
+      <div ref={reactFlowWrapper} className="w-full h-full">
         <ReactFlow
           nodes={nodes}
           edges={edges}
