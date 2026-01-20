@@ -85,7 +85,7 @@ export const nodeConfigs = {
         name: "text",
         label: "Text:",
         type: "text",
-        defaultValue: "{{input}}",
+        defaultValue: "",
         placeholder: "Enter text...",
       },
     ],
@@ -369,7 +369,7 @@ export const nodeConfigs = {
         type: "textarea",
         rows: 3,
         placeholder: "Enter your prompt or use {{variable}}...",
-        defaultValue: "{{input}}",
+        defaultValue: "",
       },
       {
         name: "model",
@@ -467,7 +467,7 @@ export const nodeConfigs = {
         type: "textarea",
         rows: 3,
         placeholder: "Enter your prompt or use {{variable}}...",
-        defaultValue: "{{input}}",
+        defaultValue: "",
       },
       {
         name: "apiKey",

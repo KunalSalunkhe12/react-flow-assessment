@@ -4,6 +4,7 @@ import { useStore } from "../../store";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
+import { X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ export const BaseNode = ({ id, data, config }) => {
   });
 
   const updateNodeField = useStore((state) => state.updateNodeField);
+  const deleteNode = useStore((state) => state.deleteNode);
 
   // Handle field changes
   const handleFieldChange = (fieldName, value) => {
@@ -157,7 +159,17 @@ export const BaseNode = ({ id, data, config }) => {
       ))}
 
       {config.title && (
-        <div className="bg-primary/20 py-1 px-2 rounded-sm">{config.title}</div>
+        <div className="bg-primary/20 py-1 px-2 rounded-sm flex items-center justify-between">
+          <span>{config.title}</span>
+
+          <button
+            onClick={() => deleteNode(id)}
+            className="cursor-pointer hover:bg-primary/30 rounded p-0.5 transition-colors"
+            title="Delete node"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
       )}
 
       <div className="px-2">

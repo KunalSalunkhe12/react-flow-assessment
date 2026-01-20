@@ -1,12 +1,7 @@
 // store.js
 
 import { create } from "zustand";
-import {
-  addEdge,
-  applyNodeChanges,
-  applyEdgeChanges,
-  MarkerType,
-} from "@xyflow/react";
+import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 
 export const useStore = create((set, get) => ({
   nodes: [],
@@ -41,7 +36,7 @@ export const useStore = create((set, get) => ({
       edges: addEdge(
         {
           ...connection,
-          type: "smoothstep",
+          type: "default",
           animated: true,
         },
         get().edges
@@ -60,6 +55,19 @@ export const useStore = create((set, get) => ({
         }
         return node;
       }),
+    });
+  },
+  deleteNode: (nodeId) => {
+    set({
+      nodes: get().nodes.filter((node) => node.id !== nodeId),
+      edges: get().edges.filter(
+        (edge) => edge.source !== nodeId && edge.target !== nodeId
+      ),
+    });
+  },
+  deleteEdge: (edgeId) => {
+    set({
+      edges: get().edges.filter((edge) => edge.id !== edgeId),
     });
   },
 }));

@@ -18,6 +18,7 @@ import {
   VectorStoreNode,
 } from "./components/nodes/NodeTypes";
 import { nodeConfigs } from "./components/nodes/nodeConfigs";
+import { CustomEdge } from "./components/edges/CustomEdge";
 
 import "@xyflow/react/dist/style.css";
 
@@ -35,6 +36,11 @@ const nodeTypes = {
   customAI: CustomAINode,
   vectorStore: VectorStoreNode,
   document: DocumentNode,
+};
+
+// Register custom edge types
+const edgeTypes = {
+  default: CustomEdge,
 };
 
 const selector = (state) => ({
@@ -127,6 +133,7 @@ export const PipelineUI = () => {
           onDragOver={onDragOver}
           onInit={setReactFlowInstance}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           proOptions={proOptions}
           snapGrid={[gridSize, gridSize]}
           connectionLineType="smoothstep"
