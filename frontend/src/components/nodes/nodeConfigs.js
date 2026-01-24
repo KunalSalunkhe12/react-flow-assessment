@@ -77,16 +77,22 @@ export const nodeConfigs = {
 
   text: {
     title: "Text",
-    width: 200,
+    width: 250,
+    minWidth: 200,
+    maxWidth: 300,
     minHeight: 100,
+    dynamicSize: true, // Enable dynamic resizing
+    enableVariableHandles: true, // Enable variable detection and handle creation
     handles: [{ type: "source", position: Position.Right, id: "output" }],
     fields: [
       {
         name: "text",
         label: "Text:",
-        type: "text",
+        type: "textarea",
         defaultValue: "",
-        placeholder: "Enter text...",
+        placeholder: "Enter text... Use {{variableName}} for variables",
+        rows: 3,
+        enableVariables: true, // Enable variable detection for this field
       },
     ],
   },
@@ -322,15 +328,10 @@ export const nodeConfigs = {
         placeholder: "Describe the pipeline...",
       },
       {
-        name: "executionMode",
-        label: "Execution Mode:",
-        type: "select",
-        defaultValue: "sequential",
-        options: [
-          { value: "sequential", label: "Sequential" },
-          { value: "parallel", label: "Parallel" },
-          { value: "conditional", label: "Conditional" },
-        ],
+        name: "enabled",
+        label: "Enabled",
+        type: "checkbox",
+        defaultValue: true,
       },
     ],
   },
@@ -338,14 +339,8 @@ export const nodeConfigs = {
   openAI: {
     title: "OpenAI",
     width: 280,
-    minHeight: 240,
+    minHeight: 340,
     handles: [
-      {
-        type: "target",
-        position: Position.Left,
-        id: "system",
-        style: { top: "25%" },
-      },
       {
         type: "target",
         position: Position.Left,
@@ -468,6 +463,7 @@ export const nodeConfigs = {
         rows: 3,
         placeholder: "Enter your prompt or use {{variable}}...",
         defaultValue: "",
+        enableVariables: true, // Enable variable detection
       },
       {
         name: "apiKey",
