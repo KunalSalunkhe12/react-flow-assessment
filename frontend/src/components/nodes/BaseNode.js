@@ -330,13 +330,6 @@ export const BaseNode = ({ id, data, config }) => {
         <div className="bg-primary/20 py-1 px-2 rounded-sm flex items-center justify-between">
           <div className="flex items-center gap-2 flex-1">
             <span className="font-medium">{config.title}</span>
-            {config.enableVariableHandles && detectedVariables.length > 0 && (
-              <span className="text-xs text-blue-600">
-                ({detectedVariables.length} variable
-                {detectedVariables.length !== 1 ? "s" : ""}:{" "}
-                {detectedVariables.join(", ")})
-              </span>
-            )}
           </div>
 
           <button
